@@ -1,13 +1,14 @@
-package com.api.rest.encuestas.controllers;
+package com.api.rest.encuestas.controllers.v2;
 
 import com.api.rest.encuestas.exception.ResourceNotFoundException;
 import com.api.rest.encuestas.model.Encuesta;
 import com.api.rest.encuestas.repositories.EncuestaRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -15,19 +16,25 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/encuesta")
+//Sin versionado de la API
+//@RestController
+//@RequestMapping("/encuesta")
+
+//Con Versionado de la API
+@RestController("EncuestaControllerV2") //se agrego ("EncuestaControllerV1")  para definir la version v1
+@RequestMapping("/v2/encuesta")
 public class EncuestaController {
 
     @Autowired
     private EncuestaRepository encuestaRepository;
 
-    @GetMapping   ////GET: http://localhost:8080/encuesta
-    public ResponseEntity<Iterable<Encuesta>> listarTodasEncuestas(){
-        return new ResponseEntity<>(encuestaRepository.findAll(), HttpStatus.OK);
+    @GetMapping   ////GET: http://localhost:8080/v2/encuesta
+    public ResponseEntity<Iterable<Encuesta>> listarTodasEncuestas(Pageable pageable){
+        Page<Encuesta> encuestas = encuestaRepository.findAll(pageable);
+        return new ResponseEntity<>(encuestas , HttpStatus.OK);
     }
 
-    @PostMapping  //POST: http://localhost:8080/encuesta
+    @PostMapping  //POST: http://localhost:8080/v2/encuesta
     public ResponseEntity<?> crearEncuesta(@Valid @RequestBody Encuesta encuesta){ //La anotacion @Valid realiza la validaciones que se defiinio en Encuesta.
        encuesta = encuestaRepository.save(encuesta);
 
@@ -55,7 +62,7 @@ public class EncuestaController {
      }
      */
 
-    @GetMapping("/{encuesta_Id}")  //GET: - http://localhost:8080/encuesta/1
+    @GetMapping("/{encuesta_Id}")  //GET: - http://localhost:8080/v2/encuesta/1
     public ResponseEntity<?> ObtenerEncuesta(@PathVariable Long encuesta_Id){
 
         verifyEncuesta(encuesta_Id); //llama la funcion verificar encuesta si existe
@@ -85,6 +92,16 @@ public class EncuestaController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
+    /* PUT:  http://localhost:8080/v2/encuesta/1
+    {
+    "pregunta": "¿Cual considera que es su lenguaje de programacion favorito en 2025?",
+    "opciones":[
+        {"value":"Java"},
+        {"value":"C"}
+    ]
+}
+     */
 
     @DeleteMapping("/{encuesta_Id}")
     public ResponseEntity<?> eliminarEncuesta(@PathVariable Long encuesta_Id){

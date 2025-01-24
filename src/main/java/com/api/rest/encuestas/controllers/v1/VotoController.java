@@ -1,4 +1,4 @@
-package com.api.rest.encuestas.controllers;
+package com.api.rest.encuestas.controllers.v1;
 
 import com.api.rest.encuestas.model.Voto;
 import com.api.rest.encuestas.repositories.VotoRepository;
@@ -9,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@RestController
-@RequestMapping("/encuesta")
+//Sin versionado de la API
+//@RestController
+//@RequestMapping("/encuesta")
+
+//Con Versionado de la API
+@RestController("VotoControllerV1") //se agrego ("EncuestaControllerV1")  para definir la version v1
+@RequestMapping("/v1/encuesta")
 public class VotoController {
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.api.rest.encuestas.controllers;
+package com.api.rest.encuestas.controllers.v1;
 
 
 import com.api.rest.encuestas.dto.OpcionCount;
@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/encuesta")
+@RestController("EncuestaControllerV1_Computer") //se agrego ("EncuestaControllerV1")  para definir la version v1
+@RequestMapping("/v1/encuesta")
 public class ComputeResultController {
 
     @Autowired
